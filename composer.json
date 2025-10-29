@@ -1,0 +1,149 @@
+{
+    "name": "gemstracker/next-new-project",
+    "description": "Gemstracker New Project base in Mezzio",
+    "type": "project",
+    "license": "BSD-3-Clause",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "homepage": "https://gemstracker.org",
+    "support": {
+        "docs": "https://gemstracker.org/wiki/doku.php?id=start",
+        "issues": "https://github.com/GemsTracker/gemstracker-library/issues",
+        "source": "https://github.com/GemsTracker/gems-new-project"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "composer/package-versions-deprecated": true,
+            "laminas/laminas-component-installer": false
+        }
+    },
+    "extra": {
+        "laminas": {
+            "component-whitelist": [
+                "mezzio/mezzio",
+                "mezzio/mezzio-helpers",
+                "mezzio/mezzio-router",
+                "laminas/laminas-httphandlerrunner",
+                "mezzio/mezzio-fastroute",
+                "mezzio/mezzio-twigrenderer"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.1.0",
+        "composer/package-versions-deprecated": "^1.11.99",
+        "gemstracker/gemstracker": "2.x-dev",
+        "laminas/laminas-config-aggregator": "^1.7",
+        "laminas/laminas-diactoros": "^2.11",
+        "laminas/laminas-servicemanager": "^3.11",
+        "laminas/laminas-stdlib": "^3.9",
+        "magnafacta/zalt-loader": "dev-psr-11",
+        "mezzio/mezzio": "^3.10",
+        "mezzio/mezzio-csrf": "^1.5",
+        "mezzio/mezzio-fastroute": "^3.5.0",
+        "mezzio/mezzio-flash": "^1.3",
+        "mezzio/mezzio-helpers": "^5.8",
+        "mezzio/mezzio-session-cache": "^1.7",
+        "mezzio/mezzio-twigrenderer": "^2.9",
+        "symfony/dotenv": "^6.2",
+        "robmorgan/phinx": "dev-master"
+    },
+    "require-dev": {
+        "filp/whoops": "^2.14.5",
+        "itsgoingd/clockwork": "^5.1",
+        "laminas/laminas-development-mode": "^3.6.0",
+        "mezzio/mezzio-tooling": "^2.5",
+        "phpspec/prophecy-phpunit": "^2.0",
+        "phpstan/phpstan": "^1.7",
+        "phpunit/phpunit": "^9.5.20",
+        "roave/security-advisories": "dev-master",
+        "squizlabs/php_codesniffer": "^3.6",
+        "vimeo/psalm": "^5.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/App/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AppTest\\": "test/AppTest/"
+        }
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/jvangestel/phinx.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/gemstracker/gems-api.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/gemstracker/gems-fhir-api.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/gemstracker/gems-oauth2.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/gemstracker/gemstracker-library.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/GemsTracker/MUtil.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/MagnaFacta/zalt-html.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/MagnaFacta/zalt-laminas-filter.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/MagnaFacta/zalt-laminas-validator.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/MagnaFacta/zalt-late.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/MagnaFacta/zalt-loader.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/MagnaFacta/zalt-model.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/MagnaFacta/zalt-util.git"
+        }
+    ],
+    "scripts": {
+        "post-create-project-cmd": [
+            "@development-enable"
+        ],
+        "development-disable": "laminas-development-mode disable",
+        "development-enable": "laminas-development-mode enable",
+        "development-status": "laminas-development-mode status",
+        "mezzio": "laminas --ansi",
+        "check": [
+            "@cs-check",
+            "@test"
+        ],
+        "clear-config-cache": "php bin/clear-config-cache.php",
+        "enable-codestandard": "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run",
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "serve": "php -S 0.0.0.0:8080 -t public/",
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
+    }
+}

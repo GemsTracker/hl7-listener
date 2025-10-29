@@ -1,0 +1,9 @@
+/.idea
+/.vscode
+/vendor
+/vendor2.x
+/node_modules
+/public/build
+.env
+.phpunit.result.cache
+/public/vite-dev-server

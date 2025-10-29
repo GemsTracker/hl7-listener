@@ -1,0 +1,122 @@
+version: '3.7'
+services:
+  web:
+    image: nginx:latest
+    restart: always
+    networks:
+      - webdev
+    labels:
+       - traefik.enable=true
+       - traefik.http.routers.gemstracker.rule=Host(`gemstracker.test`)
+       - traefik.http.routers.gemstracker.entrypoints=http,https
+    ports:
+      - "8080:80"
+    volumes:
+      - ./docker/default.conf:/etc/nginx/conf.d/default.conf
+      - ./:/app
+      #- ../pulse_ls:/app/public/ls
+      #- ./docker/ls/config.php:/app/public/ls/application/config/config.php
+    links:
+      - php
+
+  php:
+    build:
+      context: docker/php
+      dockerfile: php.Dockerfile
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+    networks:
+      - webdev
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.gems-vite.rule=Host(`gemstracker.test`)
+      - traefik.http.routers.gems-vite.entrypoints=vite
+    volumes:
+      - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - ./:/app
+    env_file:
+      - .env
+
+  limesurvey:
+    image: martialblog/limesurvey:5.6.30-230711-fpm
+    networks:
+      - webdev
+    env_file:
+      - ./docker/ls/test.env
+    volumes:
+      - limesurvey:/var/www/html
+  limesurvey-web:
+    image: nginx:latest
+    restart: always
+    networks:
+      - webdev
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.limesurvey.rule=Host(`gems-ls.test`)
+      - traefik.http.routers.limesurvey.entrypoints=http,https
+    volumes:
+      - ./docker/ls/default.root.conf:/etc/nginx/conf.d/default.conf
+      - limesurvey:/var/www/html
+
+  mysql:
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    networks:
+      - webdev
+    environment:
+      - MYSQL_ROOT_PASSWORD=test123
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init/01-gems-db-init.sql:/docker-entrypoint-initdb.d/01-gems-db-init.sql
+
+  traefik:
+     image: traefik:v2.6
+     command:
+       - --api.insecure=true
+       - --providers.docker
+       - --entryPoints.http.address=:80
+       - --entryPoints.https.address=:443
+       - --entryPoints.vite.address=:5173
+     networks:
+       - webdev
+     ports:
+       - "80:80"
+       - "443:443"
+       - "8082:8080"
+       - "5173:5173"
+     volumes:
+       - /var/run/docker.sock:/var/run/docker.sock
+
+  adminer:
+     build:
+       context: ./docker
+       dockerfile: adminer.Dockerfile
+     restart: always
+     labels:
+        - traefik.http.routers.adminer.rule=Host(`adminer.test`)
+        - traefik.http.routers.adminer.entrypoints=http,https
+     networks:
+       - webdev
+     environment:
+       ADMINER_DEFAULT_SERVER: mysql
+
+  mailpit:
+    container_name: mailpit
+    image: axllent/mailpit
+    restart: always
+    labels:
+      - traefik.http.routers.mailpit.rule=Host(`mailpit.test`)
+      - traefik.http.routers.mailhog.entrypoints=http,https
+      - traefik.http.services.mailpit.loadbalancer.server.port=8025
+    networks:
+      - webdev
+
+networks:
+  webdev:
+    name: webdev
+
+volumes:
+  limesurvey:
+  mysql_data:

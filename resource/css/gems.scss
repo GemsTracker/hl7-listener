@@ -1,0 +1,41 @@
+@use "sass:map";
+
+@import '../../node_modules/gems-style/src/assets/css/scss/base-variables.scss';
+@import 'project-variables.scss';
+
+@import '../../node_modules/bootstrap/scss/bootstrap.scss';
+@import '../../node_modules/gems-style/src/assets/css/scss/bootstrap-based-variables.scss';
+@import 'project-bootstrap-based-variables.scss';
+
+@import '../../node_modules/gems-style/src/assets/css/scss/basic-layout.scss';
+@import '../../node_modules/gems-style/src/assets/css/scss/buttons.scss';
+@import '../../node_modules/gems-style/src/assets/css/scss/calendar.scss';
+@import '../../node_modules/gems-style/src/assets/css/scss/clipboard.scss';
+@import '../../node_modules/gems-style/src/assets/css/scss/compliance.scss';
+@import '../../node_modules/gems-style/src/assets/css/scss/font-awesome.scss';
+@import '../../node_modules/gems-style/src/assets/css/scss/forms.scss';
+@import '../../node_modules/gems-style/src/assets/css/scss/rte.scss';
+@import '../../node_modules/gems-style/src/assets/css/scss/helpers.scss';
+@import '../../node_modules/gems-style/src/assets/css/scss/links.scss';
+@import '../../node_modules/gems-style/src/assets/css/scss/locale.scss';
+@import '../../node_modules/gems-style/src/assets/css/scss/menu.scss';
+@import '../../node_modules/gems-style/src/assets/css/scss/pagination.scss';
+@import '../../node_modules/gems-style/src/assets/css/scss/tables.scss';
+@import '../../node_modules/gems-style/src/assets/css/scss/trafficlight.scss';
+@import '../../node_modules/gems-style/src/assets/css/scss/auth-idle-checker.scss';
+
+@import '../../node_modules/air-datepicker/air-datepicker.css';
+
+:root {
+  --bs-primary: #167c85;
+  --bs-secondary: #1a355d;
+}
+
+$fa-font-path: '../../node_modules/@fortawesome/fontawesome-free/webfonts';
+
+@import '../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss';
+@import '../../node_modules/@fortawesome/fontawesome-free/scss/solid.scss';
+
+@import 'project.scss';
+
+
