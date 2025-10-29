@@ -1,7 +1,7 @@
 {
-    "name": "gemstracker/next-new-project",
-    "description": "Gemstracker New Project base in Mezzio",
-    "type": "project",
+    "name": "gemstracker/hl7-listener",
+    "description": "Gemstracker Listener Module",
+    "type": "module",
     "license": "BSD-3-Clause",
     "minimum-stability": "dev",
     "prefer-stable": true,
