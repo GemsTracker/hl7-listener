@@ -5,15 +5,12 @@ declare(strict_types=1);
 namespace Gems\Hl7;
 
 use Gems\Util\RouteGroupTrait;
-use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Console\Command\Command;
 
 /**
  * The configuration provider for the Hl7 module
  *
  * @see https://docs.laminas.dev/laminas-component-installer/
  */
-#[AsCommand(name: 'hl7:listen', description: 'Listen on a port')]
 class Hl7ConfigProvider
 {
     use RouteGroupTrait;

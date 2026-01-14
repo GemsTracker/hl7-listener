@@ -1,6 +1,6 @@
 {
     "name": "gemstracker/hl7-listener",
-    "description": "Gemstracker Listener Module",
+    "description": "Gemstracker HL7 ADT and SUI Listener Module",
     "type": "module",
     "license": "BSD-3-Clause",
     "minimum-stability": "dev",
