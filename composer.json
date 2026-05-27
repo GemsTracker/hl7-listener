@@ -20,10 +20,11 @@
         }
     },
     "require": {
-        "php": "^8.1.0",
+        "php": "^8.2.0",
         "aranyasen/hl7": "dev-master",
         "gemstracker/gemstracker": "2.x-dev",
-        "react/socket": "^1.16"
+        "react/socket": "^1.16",
+        "react/event-loop": "^1.6"
     },
     "require-dev": {
         "laminas/laminas-development-mode": "^3.6.0",
