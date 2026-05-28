@@ -18,7 +18,7 @@ namespace Gems\Hl7\Node;
 class Hl7Type
 {
     /**
-     * @var Field
+     * @var BaseNode
      */
     protected BaseNode $content;
 

@@ -24,7 +24,7 @@ class ACKMessage extends Message
     {
         $this->escapeSequences['cursor_return'] = chr(13);  // Fix incorrect setting;
 
-        $msh = $incomingMessage->getMshSegment('MSH');;
+        $msh = $incomingMessage->getMshSegment();
 
         // To copy the segment, we create a newMSH segment, and add a new field with a repetition that hold the string value from the incoming MSH
         $class = get_class($msh);

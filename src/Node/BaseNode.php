@@ -43,11 +43,7 @@ abstract class BaseNode implements \ArrayAccess, \Countable, \Iterator
         return count($this->children);
     }
 
-    /*
-     * (non-PHPdoc)
-     * @see Iterator::current()
-     */
-    public function current()
+    public function current(): mixed
     {
         return current($this->children);
     }
@@ -68,67 +64,39 @@ abstract class BaseNode implements \ArrayAccess, \Countable, \Iterator
         return $this->parent->getRootNode();
     }
 
-    /*
-     * (non-PHPdoc)
-     * @see Iterator::key()
-     */
-    public function key()
+    public function key(): mixed
     {
         return key($this->children);
     }
 
-    /*
-     * (non-PHPdoc)
-     * @see Iterator::next()
-     */
-    public function next()
+    public function next(): void
     {
-        return next($this->children);
+         next($this->children);
     }
 
-    /*
-     * (non-PHPdoc)
-     * @see ArrayAccess::offsetExists()
-     */
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
         return array_key_exists($offset, $this->children);
     }
 
-    /*
-     * (non-PHPdoc)
-     * @see ArrayAccess::offsetGet()
-     */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->children[$offset];
     }
 
-    /*
-     * (non-PHPdoc)
-     * @see ArrayAccess::offsetSet()
-     */
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->children[$offset] = $value;
     }
 
-    /*
-     * (non-PHPdoc)
-     * @see ArrayAccess::offsetUnset()
-     */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->children[$offset]);
     }
 
-    /*
-     * (non-PHPdoc)
-     * @see Iterator::rewind()
-     */
-    public function rewind()
+    public function rewind(): void
     {
-        return reset($this->children);
+        reset($this->children);
     }
 
     public function setParent(BaseNode $node): void
@@ -136,11 +104,7 @@ abstract class BaseNode implements \ArrayAccess, \Countable, \Iterator
         $this->parent = $node;
     }
 
-    /*
-     * (non-PHPdoc)
-     * @see Iterator::valid()
-     */
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->children[$this->key()]);
     }

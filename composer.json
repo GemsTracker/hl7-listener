@@ -21,20 +21,15 @@
     },
     "require": {
         "php": "^8.2.0",
-        "aranyasen/hl7": "dev-master",
         "gemstracker/gemstracker": "2.x-dev",
         "react/socket": "^1.16",
         "react/event-loop": "^1.6"
     },
     "require-dev": {
-        "laminas/laminas-development-mode": "^3.6.0",
-        "mezzio/mezzio-tooling": "^2.5",
+        "jangregor/phpstan-prophecy": "1.*",
         "phpspec/prophecy-phpunit": "^2.0",
-        "phpstan/phpstan": "^1.7",
-        "phpunit/phpunit": "^9.5.20",
-        "roave/security-advisories": "dev-master",
-        "squizlabs/php_codesniffer": "^3.6",
-        "vimeo/psalm": "^5.8"
+        "phpstan/phpstan": "^1.12",
+        "phpunit/phpunit": "^10.5.0"
     },
     "autoload": {
         "psr-4": {
@@ -97,23 +92,12 @@
         }
     ],
     "scripts": {
-        "post-create-project-cmd": [
-            "@development-enable"
+        "stan": [
+            "vendor/bin/phpstan --memory-limit=512M"
         ],
-        "development-disable": "laminas-development-mode disable",
-        "development-enable": "laminas-development-mode enable",
-        "development-status": "laminas-development-mode status",
-        "mezzio": "laminas --ansi",
-        "check": [
-            "@cs-check",
-            "@test"
+        "test": [
+            "vendor/bin/phpunit test"
         ],
-        "clear-config-cache": "php bin/clear-config-cache.php",
-        "enable-codestandard": "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run",
-        "cs-check": "phpcs",
-        "cs-fix": "phpcbf",
-        "serve": "php -S 0.0.0.0:8080 -t public/",
-        "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     }
 }

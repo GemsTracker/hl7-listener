@@ -30,7 +30,7 @@ class MessageParser
     /**
      * A installation specific segment loading class map
      *
-     * @var array<string, Segment> Segment name => segment class
+     * @var array<string, string> Segment name => Segment class name
      */
     protected readonly array $segmentClassMap;
 
@@ -69,7 +69,6 @@ class MessageParser
     /**
      *
      * @param string $hl7String
-     * @param array $segmentClassMap
      * @param boolean $encodingCheck  To prevent endless loops, use this switch
      * @return Message
      */
@@ -153,7 +152,7 @@ class MessageParser
         $repetitionStrings = explode($escapeSequences['repeat_delimiter'], $fieldString);
         foreach($repetitionStrings as $repetitionString) {
             $repetition = $this->splitComponents($repetitionString, $escapeSequences);
-            $field->append($repetition, $escapeSequences);
+            $field->append($repetition);
         }
         return $field;
     }

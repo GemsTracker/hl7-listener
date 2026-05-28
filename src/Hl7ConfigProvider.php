@@ -26,17 +26,9 @@ class Hl7ConfigProvider
     public function __invoke(): array
     {
         return [
-//            'console'      => $this->getConsoleSettings(),
-//            'dependencies' => $this->getDependencies(),
+            'dependencies' => $this->getDependencies(),
             'hl7listener'  => $this->getHl7ListenerSettings(),
-//            'routes'       => $this->getRoutes(),
-        ];
-    }
-
-    public function getConsoleSettings(): array
-    {
-        return [
-            'resetPassword' => true,
+            'routes'       => $this->getRoutes(),
         ];
     }
 

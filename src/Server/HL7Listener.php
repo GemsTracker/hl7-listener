@@ -224,9 +224,9 @@ class HL7Listener extends EventEmitter implements EventEmitterInterface
      *
      * @param string $data Raw data
      * @param Message $message
-     * @return int Message id from database
+     * @return int|false Message id from database
      */
-    public function saveToDb($data, Message $message)
+    public function saveToDb($data, Message $message): int|false
     {
         $msh = $message->getMshSegment();
 
