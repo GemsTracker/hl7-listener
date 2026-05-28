@@ -12,9 +12,11 @@ namespace Gems\Hl7\Server;
 
 use Evenement\EventEmitter;
 use Evenement\EventEmitterInterface;
-// use PharmaIntelligence\MLLP\MLLPParser;
-use Gems\Config\ConfigAccessor;
-use Gems\Factory\LaminasDbAdapterFactory;
+use Gems\Hl7\Node\Message;
+use Gems\Hl7\Node\Message\ACKMessage;
+use Gems\Hl7\Node\Segment\MSHSegment;
+use Gems\Hl7\Parser\MessageParser;
+use Gems\Hl7\Parser\MLLPParser;
 use Laminas\Db\Adapter\AdapterInterface;
 use React\EventLoop\Loop;
 use React\Socket\ConnectionInterface;
@@ -30,19 +32,20 @@ class HL7Listener extends EventEmitter implements EventEmitterInterface
     protected readonly array $listenerConfig;
     protected readonly SocketServer $socketServer;
 
-    protected readonly bool $verbose;
+    protected bool $verbose;
 
     public function __construct(
         protected readonly string $listener,
         protected readonly array $config,
         protected readonly AdapterInterface $db,
+        protected readonly MessageParser $messageParser,
     ) {
         $this->listenerConfig = $this->config['hl7listener'][$this->listener] ?? [];
 
         $port       = $this->listenerConfig['port'];
         $ipAddress  = $this->listenerConfig['ipAddress'] ?? '127.0.0.1';
         $dbPingTime = $this->listenerConfig['dbPingTime'] ?? 6;
-        $this->verbose = $this->listenerConfig['verbose'] ?? ($this->config['hl7listener']['verbase'] ?? false);
+        $this->verbose = (bool) ($this->listenerConfig['verbose'] ?? ($this->config['hl7listener']['verbose'] ?? false));
 
         $this->socketServer = new SocketServer("tcp://$ipAddress:$port");
         $this->socketServer->on('connection', function(ConnectionInterface $connection) {
@@ -61,14 +64,14 @@ class HL7Listener extends EventEmitter implements EventEmitterInterface
             $port
         ));
 
-//        $this->on('data', [$this, 'onReceiving']);
-//        $this->on('error', [$this, 'onError']);
+        $this->on('data', [$this, 'onReceiving']);
+        $this->on('error', [$this, 'onError']);
     }
 
     /**
      * @return void Check the db abd reestablish the connection if broken'
      */
-    public function checkDb()
+    public function checkDb(): void
     {
         if (isset($this->listenerConfig['checkAliveLog'])) {
             $msg = "Listener Timer Check at " . date('d-m-Y H:i:s');
@@ -90,11 +93,12 @@ class HL7Listener extends EventEmitter implements EventEmitterInterface
         }
     }
 
-    public function handleRequest(ConnectionInterface $connection) {
+    public function handleRequest(ConnectionInterface $connection): void
+    {
         $this->emit('connection', array($connection));
         $connection->on('data', function($data) use ($connection) {
             try {
-                // $data = MLLPParser::unwrap($data);
+                $data = MLLPParser::unwrap($data);
                 $this->emit('data', array($data, $connection));
             } catch(\InvalidArgumentException $e) {
                 $this->handleInvalidMLLPEnvelope($data, $connection);
@@ -103,7 +107,7 @@ class HL7Listener extends EventEmitter implements EventEmitterInterface
         });
     }
 
-    public function initLogging()
+    public function initLogging(): void
     {
         $self = $this;
 
@@ -125,8 +129,8 @@ class HL7Listener extends EventEmitter implements EventEmitterInterface
 
         // Log sent data
         $this->on('send', function($data, ConnectionInterface $connection) use ($self) {
-            $self->log(PHP_EOL . 'Sending to ' . $connection->getRemoteAddress() . ' at ' . date('c') . ' bytes ' . strlen($data) . ' data: ' . PHP_EOL .
-                str_replace(chr(13), PHP_EOL, $data) . ' ');
+            $self->log(PHP_EOL . 'Sending to ' . $connection->getRemoteAddress() . ' at ' . date('c') . ' bytes ' . strlen((string) $data) . ' data: ' . PHP_EOL .
+                str_replace(chr(13), PHP_EOL, (string) $data) . ' ');
         });
 
         // Log received data
@@ -136,7 +140,18 @@ class HL7Listener extends EventEmitter implements EventEmitterInterface
         });
     }
 
-    public function log(string $message)
+    /**
+     * Filter function to establish which messages to save
+     *
+     * @param Message $message
+     * @return boolean
+     */
+    public function isMessageSaveable(Message $message)
+    {
+        return $message->getMshSegment() instanceof MSHSegment;
+    }
+
+    public function log(string $message): void
     {
         if ($this->verbose) {
             echo $message . PHP_EOL;
@@ -152,12 +167,20 @@ class HL7Listener extends EventEmitter implements EventEmitterInterface
      * @param mixed $errorMessage
      * @param ConnectionInterface $connection
      */
-    public function onError($errorMessage, ConnectionInterface $connection)
+    public function onError($errorMessage, ConnectionInterface $connection): void
     {
-        echo PHP_EOL . PHP_EOL . sprintf(
-                'Error from {{{ ' . $connection->getRemoteAddress() . ' at %s: %s }}}' . PHP_EOL,
-                date('c'),
-                $errorMessage);
+        $verbose = $this->verbose;
+        $this->verbose = true;
+
+        $msg = sprintf(
+            'Error from {{{ ' . $connection->getRemoteAddress() . ' at %s: %s }}}',
+            date('c'),
+            $errorMessage);
+
+        // Make sure the error is shown somewhere
+        $this->log(PHP_EOL . PHP_EOL . $msg);
+        error_log($msg);
+        $this->verbose = $verbose;
     }
 
     /**
@@ -166,39 +189,23 @@ class HL7Listener extends EventEmitter implements EventEmitterInterface
      * @param mixed $data
      * @param ConnectionInterface $connection
      */
-    public function onReceiving($data, ConnectionInterface $connection)
+    public function onReceiving($data, ConnectionInterface $connection): void
     {
-        // Do something here to make sure the encoding is correct
-        // echo mb_check_encoding($data, 'WINDOWS-1252');
-        // echo mb_check_encoding($data, 'UTF-8');
-        // echo mb_convert_encoding($data, 'UTF-8', 'WINDOWS-1252');
-//        $message = $this->messageLoader->loadMessage($data);
-//
-//        if (! $message) {
-//            echo "Invalid message send.\n";
-//        }
-//
-//        $saveMessage = $this->isMessageSaveable($message);
-//        // $saveMessage = false;
-//        // echo "Save msg: $saveMessage\n";
-//
-//        if ($saveMessage)  {
-//            $encoding = $message->getMessageHeaderSegment()->getCharacterset();
-//            $internal = mb_internal_encoding();
-//            if ($internal != $encoding) {
-//                $messageId = $this->saveToDb(mb_convert_encoding($data, $internal, $encoding), $message);
-//            } else {
-//                $messageId = $this->saveToDb($data, $message);
-//            }
-//
-//            // echo "Msg id: $messageId\n";
-//        }
-//
-//        $this->sendAcknowledgement($message, $connection);
-//
-//        // Do not end the connection as it blocks later messages
-//        // $connection->end();
-//
+        $message = $this->messageParser->parseMessage($data);
+
+        $saveMessage = $this->isMessageSaveable($message);
+        // $saveMessage = false;
+        // echo "Save msg: $saveMessage\n";
+
+        if ($saveMessage)  {
+            $messageId = $this->saveToDb($data, $message);
+
+            // echo "Msg id: $messageId\n";
+        }
+
+        $this->sendAcknowledgement($message, $connection);
+
+
 //        if ($saveMessage && $messageId) {
 //            $queueIds = $this->queueManager->processMessage($messageId, $message);
 //            // print_r($queueIds);
@@ -210,7 +217,6 @@ class HL7Listener extends EventEmitter implements EventEmitterInterface
 //            }
 //        }
 //
-        unset($ack);
         unset($message);
     }
 
@@ -220,11 +226,11 @@ class HL7Listener extends EventEmitter implements EventEmitterInterface
      * @param Message $message
      * @return int Message id from database
      */
-    public function saveToDb($data) // , Message $message)
+    public function saveToDb($data, Message $message)
     {
-//        $msh = $message->getMshSegment();
-//
-//        if ($msh) {
+        $msh = $message->getMshSegment();
+
+        if ($msh) {
 //            if (! $this->_messageTable) {
 //                $this->_initMessageTable();
 //            }
@@ -243,25 +249,42 @@ class HL7Listener extends EventEmitter implements EventEmitterInterface
 //            if ($this->_messageTable->insert($values)) {
 //                return $this->_messageTable->getLastInsertValue();
 //            }
-//        }
-//
-//        return false;
+        }
+
+        return false;
     }
 
-    public function send($data, ConnectionInterface $connection) {
-        $this->emit('send', array($data));
+    public function send($data, ConnectionInterface $connection): void
+    {
+        $this->emit('send', [$data, $connection]);
 
         $connection->on('error', function(ConnectionInterface $connection, $error) {
             $this->emit('error', array('Error sending data: '.$error));
         });
 
-        // $data = MLLPParser::enclose($data);
+        $data = MLLPParser::enclose($data);
         $connection->write($data);
         $connection->removeAllListeners('error');
 
     }
 
-    protected function handleInvalidMLLPEnvelope($data, ConnectionInterface $connection) {
+    /**
+     * Send the return acknowledgement
+     *
+     * @param Message $message
+     * @return $this
+     */
+    public function sendAcknowledgement(Message $message, ConnectionInterface $connection)
+    {
+        $ack = new ACKMessage($message);
+
+        $this->send((string) $ack, $connection);
+
+        return $this;
+    }
+
+    protected function handleInvalidMLLPEnvelope($data, ConnectionInterface $connection): void
+    {
         $connection->end('INVALID ENVELOPE');
     }
 }

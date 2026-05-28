@@ -1,0 +1,11 @@
+MSH|^~\&|COMEZ|CHIPSOFT|RECAPP|RECFAC|20231130171846||ADT^A08^ADT_A01|37840758|P|2.4|||AL|NE|NLD|Windows-1252|NL||CS^A08P^*PAT^PATIENT_PATIENT
+EVN|A08|20231130171843|||ZH000026|20231130171843|CS^A08P^*PAT^PATIENT_PATIENT
+PID|1||1324363^^^CS^PI~073611360^^^NLMINBIZA^NNNLD^^20230920~IV2DRH2D3^^^NLMINBIZA^PPN~""^^^NLRDW^DL~""^^^NLIND^CZ~""^^^NLMINBUZA^CZ||Vlielander&""&Vlielander&""&""^J^""^^^^L^^^^""~Vlielander&""&Vlielander^Jan^""^^^^B~""&""&""^^^^^^P~^""^^^^^N||19540127|M|||Paulus Buysstraat 8&Paulus Buysstraat&8^""^VLAARDINGEN^^3135AT^NL^M~Paulus Buysstraat 8&Paulus Buysstraat&8^""^VLAARDINGEN^^3135AT^NL^H~^^Vlaardingen^^^""^N||0031642100686^PRN^CP^^^^^^Type: Mobiel, SMS Toestaan: Ja, opm.:~^NET^Internet^twoogeel@hotmail.com^^^^^Toestaan: Onbekend|||""|""||||||Vlaardingen|""|||||""|N|N
+ROL||UP|PP|1559^Lipschart&&Lipschart&&^S^S^^^^L^LOCAL^^^^^^^^^""~01023309^Lipschart&&Lipschart&&^S^S^^^^L^VEKTIS|||||01^Huisarts^COD008-VEKT^""^""^COD016-VEKT||Kopenhagenlaan 9&Kopenhagenlaan&9^""^Vlaardingen^^3137NP^NL^M|0102495911^PRN^PH~0102495910^ORN^PH~^NET^Internet^""~^NET^X.400^""~""^WPN^PH
+ROL||UP|PP|007154^Apotheek Copenhaege&""&""&""&""^""^""^^""^^^LOCAL|||||02||Kopenhagenlaan 5&Kopenhagenlaan&5^^Vlaardingen^^3137NP^NL^M|0104740800^ORN^PH~""^ORN^PH~^NET^Internet^""~^NET^X.400^500063541
+NK1|1|Vlielander&""&Vlielander&""&""^B^""^^^^L|^Vrouw|""^^""^^""^NL^M|0615630368||||||||||||
+PV1||O||||||||||||||""||||||||||||||||||
+PV2|||||||||||||||||||||||||||||||||||||||||||||J^Akkoord
+OBX|1|FT|Opnamememo^CS||""||||||F
+IN1|1|^Centrale Verwerkingseenheid CZ: CZ, Delta Lloyd en OHRA|V96640^^^LOCAL~9664^^^UZOVI|Centrale Verwerkingseenheid CZ: CZ, Delta Lloyd en OHRA|Postbus 90152&Postbus&90152^^Tilburg^^5000LD^NL^M||0135949949|||||20200527|||P|||||||||||||||||||||425075877
+IN2||||||||||||||||||||||||||||""|MMD

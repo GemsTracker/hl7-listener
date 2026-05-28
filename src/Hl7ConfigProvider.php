@@ -28,6 +28,7 @@ class Hl7ConfigProvider
         return [
 //            'console'      => $this->getConsoleSettings(),
 //            'dependencies' => $this->getDependencies(),
+            'hl7listener'  => $this->getHl7ListenerSettings(),
 //            'routes'       => $this->getRoutes(),
         ];
     }
@@ -48,6 +49,20 @@ class Hl7ConfigProvider
         return [
             'factories'  => [
 //              HomePageHandler::class => HomePageHandlerFactory::class,
+            ],
+        ];
+    }
+
+    public function getHl7ListenerSettings(): array
+    {
+        return [
+            'test' => [
+                'port' => 5000,
+                // 'ipAdress' => '127.0.0.1',
+                'dbPingTime' => 6,
+                'checkAliveLog' => __DIR__ . '/../../data/logs/AdtCheckAlive.log',
+                'listenerLog' => __DIR__ . '/../../data/logs/AdtListenerLog.log',
+                'verbose' => true,
             ],
         ];
     }

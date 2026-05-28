@@ -1,0 +1,9 @@
+MSH|^~\&|COMEZ|CHIPSOFT|RECAPP|RECFAC|20231130172326||SIU^S14^SIU_S12|37840892|P|2.4|||AL|NE|NLD|Windows-1252|NL||CS^S14^*AGN^AGENDA_AFSPRAAK|
+SCH|0013765994|0013765994|||ZH0372^Astrid Udo^^^^FYSIOTHERAPIE-UDO, A.|""|V^Verrichting|SR^Schriftelijke rapportage|||^^M15^202311301630^202311301645|EK^Kalsbeek, E.J. van||||ZH000280^Udo, A/Astrid|||CSA033^FYSIOTHERAPIE|""|||||Complete
+NTE||||RE
+PID|1||0806636^^^CS^PI^^^~267596522^^^NLMINBIZA^NNNLD^^20210818^~ILL3R3283^^^NLMINBIZA^PPN~""^^^NLRDW^DL~""^^^NLIND^CZ~""^^^NLMINBUZA^CZ||Burg van der&van der&Burg&""&""^M^É^^^^L^^^^NL1^~van der Burg&van der&Burg^Myrthe^Émily^^^^B~""&""&""^^^^^^P~^Myrthe^^^^^N||20071002|F|||W. Pijperstraat 41&W. Pijperstraat&41^""^Spijkenisse^^3208AV^NL^M~W. Pijperstraat 41&W. Pijperstraat&41^""^Spijkenisse^^3208AV^NL^H~^^Rotterdam^^^""^N||0031642057215^PRN^CP^^^^^^Type: Mobiel, SMS Toestaan: Onbekend, opm.: moeder~^NET^Internet^dolfine21@hotmail.com^^^^^Toestaan: Nee|||""|""||||1309013||Rotterdam|""|||||""|N|N|
+PV1||O||||||||||||||""|||||||||||||||||||||||||||||
+ZDB|0001720832|20231112||L||||||0000123059|||||CS000012||||||
+RGS|1|U
+AIL|1|U|""^""^0^RIN^^^^^""||||||0|M||Complete
+AIP|1|U|AU^Udo&""&Udo&""&""^A^""^^^^L^^^^""^||FYS||||0|M||Complete

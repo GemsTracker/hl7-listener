@@ -1,0 +1,8 @@
+MSH|^~\&|COMEZ|CHIPSOFT|RECAPP|RECFAC|20231110091001||SIU^S12^SIU_S12|37057226|P|2.4|||AL|NE|NLD|Windows-1252|NL||CS^S12^+AGN^AGENDA_AFSPRAAK|
+SCH|0013546916|0013546916|||ZH1417^Hanneke Sijbers^^^^THERAPIE ASSISTENT-SIJBERS, H.|""|V^Verrichting|TA^Therapie assistentie|||^^M15^202404121200^202404121215|WIJ^Wijffels, M.P.J.M.||||ZH000024^Poppe, M/Margret|||ZH0006^THERAPIE ASSISTENT|""|||||Booked
+NTE||||RE
+PID|1||1325501^^^CS^PI^^^~""^^^NLMINBIZA^NNNLD^^20231106^~""^^^NLMINBIZA^PPN~""^^^NLRDW^DL~""^^^NLIND^CZ~""^^^NLMINBUZA^CZ||Amer&""&Amer&""&""^M^F^^^^L^^^^""^~Amer&""&Amer^Mohammad^Faiz^^^^B~""&""&""^^^^^^P~^""^^^^^N||19580106|M|||Ooievaar 16&Ooievaar&16^""^BERKEL EN RODENRIJS^^2651RH^NL^M~Ooievaar 16&Ooievaar&16^""^BERKEL EN RODENRIJS^^2651RH^NL^H~^^Damascus^^^SY^N||0031618417851^PRN^CP^^^^^^Type: Mobiel, SMS Toestaan: Onbekend, opm.: ~^NET^Internet^""^^^^^|||""|""||||||Damascus|""|||||""|N|Y|NNWID
+PV1||O||||||||||||||""|||||||||||||||||||||||||||||
+RGS|1|U
+AIL|1|U|""^""^0^WSS^^^^^""||||||0|M||Booked
+AIP|1|U|HSB^Sijbers&""&Sijbers&""&""^H^""^^^^L^^^^""^||FYS||||0|M||Booked
