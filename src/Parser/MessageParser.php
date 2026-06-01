@@ -39,16 +39,16 @@ class MessageParser
     )
     {
         $this->segmentClassMap = [
-            'AIL' => $projectOverloader->find('HL7\\Node\\Segment\\AILSegment'),
-            'EVN' => $projectOverloader->find('HL7\\Node\\Segment\\EVNSegment'),
-            'MSA' => $projectOverloader->find('HL7\\Node\\Segment\\MSASegment'),
-            'MRG' => $projectOverloader->find('HL7\\Node\\Segment\\MRGSegment'),
-            'MSH' => $projectOverloader->find('HL7\\Node\\Segment\\MSHSegment'),
-            'NTE' => $projectOverloader->find('HL7\\Node\\Segment\\NTESegment'),
-            'PID' => $projectOverloader->find('HL7\\Node\\Segment\\PIDSegment'),
-            'PV1' => $projectOverloader->find('HL7\\Node\\Segment\\PV1Segment'),
-            'SCH' => $projectOverloader->find('HL7\\Node\\Segment\\SCHSegment'),
-            'ZDB' => $projectOverloader->find('HL7\\Node\\Segment\\ZDBSegment'),
+            'AIL' => $projectOverloader->find('Hl7\\Node\\Segment\\AILSegment'),
+            'EVN' => $projectOverloader->find('Hl7\\Node\\Segment\\EVNSegment'),
+            'MSA' => $projectOverloader->find('Hl7\\Node\\Segment\\MSASegment'),
+            'MRG' => $projectOverloader->find('Hl7\\Node\\Segment\\MRGSegment'),
+            'MSH' => $projectOverloader->find('Hl7\\Node\\Segment\\MSHSegment'),
+            'NTE' => $projectOverloader->find('Hl7\\Node\\Segment\\NTESegment'),
+            'PID' => $projectOverloader->find('Hl7\\Node\\Segment\\PIDSegment'),
+            'PV1' => $projectOverloader->find('Hl7\\Node\\Segment\\PV1Segment'),
+            'SCH' => $projectOverloader->find('Hl7\\Node\\Segment\\SCHSegment'),
+            'ZDB' => $projectOverloader->find('Hl7\\Node\\Segment\\ZDBSegment'),
         ];
     }
 
@@ -80,7 +80,7 @@ class MessageParser
         /**
          * @var Message $message
          */
-        $message = $this->projectOverloader->create('HL7\\Node\\Message');
+        $message = $this->projectOverloader->create('Hl7\\Node\\Message');
         $message->setEscapeSequences($escapeSequences);
 
         $this->splitSegments($hl7String, $message);

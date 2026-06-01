@@ -22,11 +22,14 @@
     "require": {
         "php": "^8.2.0",
         "gemstracker/gemstracker": "2.x-dev",
+        "magnafacta/zalt-loader": "^1.0.0",
+        "magnafacta/zalt-model": "^2.0.18",
         "react/socket": "^1.16",
         "react/event-loop": "^1.6"
     },
     "require-dev": {
         "jangregor/phpstan-prophecy": "1.*",
+        "magnafacta/zalt-util": "^1.0.3",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpstan/phpstan": "^1.12",
         "phpunit/phpunit": "^10.5.0"
@@ -96,8 +99,8 @@
             "vendor/bin/phpstan --memory-limit=512M"
         ],
         "test": [
-            "vendor/bin/phpunit test"
-        ],
-        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
+            "@putenv XDEBUG_MODE=coverage",
+            "vendor/bin/phpunit --configuration test/phpunit.xml test"
+        ]
     }
 }

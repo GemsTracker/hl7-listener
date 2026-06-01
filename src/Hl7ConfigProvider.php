@@ -28,6 +28,7 @@ class Hl7ConfigProvider
         return [
             'dependencies' => $this->getDependencies(),
             'hl7listener'  => $this->getHl7ListenerSettings(),
+            'migrations'   => $this->getMigrations(),
             'routes'       => $this->getRoutes(),
         ];
     }
@@ -36,7 +37,7 @@ class Hl7ConfigProvider
      * Returns the container dependencies
      * @return mixed[]
      */
-    public function getDependencies(): array
+    protected function getDependencies(): array
     {
         return [
             'factories'  => [
@@ -45,7 +46,7 @@ class Hl7ConfigProvider
         ];
     }
 
-    public function getHl7ListenerSettings(): array
+    protected function getHl7ListenerSettings(): array
     {
         return [
             'test' => [
@@ -59,12 +60,27 @@ class Hl7ConfigProvider
         ];
     }
 
+    protected function getMigrations(): array
+    {
+        return [
+            'tables' => [
+                dirname(__DIR__) . '/configs/db/tables',
+            ],
+            /*'seeds' => [
+                dirname(__DIR__) . '/configs/db/seeds',
+            ],* /
+            'patches' => [
+                dirname(__DIR__) . '/configs/db/patches',
+            ], // */
+        ];
+    }
+
     /**
      * Returns the route configuration
      *
      * @return mixed[]
      */
-    public function getRoutes(): array
+    protected function getRoutes(): array
     {
         return [];
     }

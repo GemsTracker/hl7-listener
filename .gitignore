@@ -8,3 +8,4 @@
 .phpunit.result.cache
 /public/vite-dev-server
 /composer.lock
+/test/.phpunit.cache/test-results
