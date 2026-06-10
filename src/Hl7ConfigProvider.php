@@ -53,9 +53,12 @@ class Hl7ConfigProvider
                 'port' => 5000,
                 // 'ipAdress' => '127.0.0.1',
                 'dbPingTime' => 6,
-                'checkAliveLog' => __DIR__ . '/../../data/logs/AdtCheckAlive.log',
-                'listenerLog' => __DIR__ . '/../../data/logs/AdtListenerLog.log',
-                'verbose' => true,
+                'logging' => [
+                    'checkAliveLog' => 'data/logs/TestCheckAlive.log',
+                    'echoMessages' => true,
+                    'listenerLog'   => 'data/logs/TestListenerLog.log',
+                    'verbose' => true,
+                    ],
             ],
         ];
     }

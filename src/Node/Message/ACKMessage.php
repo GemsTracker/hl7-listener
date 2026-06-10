@@ -38,25 +38,23 @@ class ACKMessage extends Message
             $newField->append($newRepetition);
         }
 
-        $msgType = $msh->getMessageType();
-
-        $mshResponse->setMessageType('ACK^' . $msgType->getTriggerEvent()); // Return second part
+        $mshResponse->setMessageType('ACK^' . $msh->getMessageStructure()); // Return second part
 
         // Flip sending and receiving application/facility
-        $receivedApplication = (string) $msh->getSendingApplication();
-        $receivedFacility    = (string) $msh->getSendingFacility();
-        $sendingApplication  = (string) $msh->getReceivingApplication();
-        $sendingFacility     = (string) $msh->getReceivingFacility();
+        $receivedApplication = $msh->getSendingApplication();
+        $receivedFacility    = $msh->getSendingFacility();
+        $sendingApplication  = $msh->getReceivingApplication();
+        $sendingFacility     = $msh->getReceivingFacility();
         $mshResponse->setReceivingApplication($receivedApplication);
         $mshResponse->setReceivingFacility($receivedFacility);
         $mshResponse->setSendingApplication($sendingApplication);
         $mshResponse->setSendingFacility($sendingFacility);
+        $this->offsetSet(0, $mshResponse);
 
         // Add the MSA segment
         $ackSegment = new MSASegment();
-        $this->append($mshResponse);
-        $this->append($ackSegment);
         $ackSegment->setAcknowledgementCode($responseCode);
         $ackSegment->setMessageControlId((string) $msh->getMessageControlId());
+        $this->offsetSet(1, $ackSegment);
     }
 }

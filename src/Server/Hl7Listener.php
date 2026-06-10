@@ -12,6 +12,7 @@ namespace Gems\Hl7\Server;
 
 use Evenement\EventEmitter;
 use Evenement\EventEmitterInterface;
+use Gems\Hl7\Model\MessageStorageModel;
 use Gems\Hl7\Node\Message;
 use Gems\Hl7\Node\Message\ACKMessage;
 use Gems\Hl7\Node\Segment\MSHSegment;
@@ -27,9 +28,12 @@ use React\Socket\SocketServer;
  * @subpackage Hl7\Server
  * @since      Class available since version 1.0
  */
-class HL7Listener extends EventEmitter implements EventEmitterInterface
+class Hl7Listener extends EventEmitter implements EventEmitterInterface
 {
     protected readonly array $listenerConfig;
+
+    protected readonly array $logConfig;
+
     protected readonly SocketServer $socketServer;
 
     protected bool $verbose;
@@ -39,13 +43,15 @@ class HL7Listener extends EventEmitter implements EventEmitterInterface
         protected readonly array $config,
         protected readonly AdapterInterface $db,
         protected readonly MessageParser $messageParser,
+        protected readonly MessageStorageModel $messageStorageModel,
     ) {
         $this->listenerConfig = $this->config['hl7listener'][$this->listener] ?? [];
 
         $port       = $this->listenerConfig['port'];
         $ipAddress  = $this->listenerConfig['ipAddress'] ?? '127.0.0.1';
-        $dbPingTime = $this->listenerConfig['dbPingTime'] ?? 6;
-        $this->verbose = (bool) ($this->listenerConfig['verbose'] ?? ($this->config['hl7listener']['verbose'] ?? false));
+        $dbPingTime = $this->listenerConfig['dbPingTime'] ?? 600;
+        $this->logConfig = $this->listenerConfig['logging'] ?? [];
+        $this->verbose   = (bool) ($this->logConfig['verbose'] ?? false);
 
         $this->socketServer = new SocketServer("tcp://$ipAddress:$port");
         $this->socketServer->on('connection', function(ConnectionInterface $connection) {
@@ -73,9 +79,9 @@ class HL7Listener extends EventEmitter implements EventEmitterInterface
      */
     public function checkDb(): void
     {
-        if (isset($this->listenerConfig['checkAliveLog'])) {
+        if (isset($this->logConfig['checkAliveLog'])) {
             $msg = "Listener Timer Check at " . date('d-m-Y H:i:s');
-            file_put_contents($this->listenerConfig['checkAliveLog'], $msg);
+            file_put_contents($this->logConfig['checkAliveLog'], $msg);
 
             if ($this->verbose) {
                 echo $msg . PHP_EOL;
@@ -129,14 +135,20 @@ class HL7Listener extends EventEmitter implements EventEmitterInterface
 
         // Log sent data
         $this->on('send', function($data, ConnectionInterface $connection) use ($self) {
-            $self->log(PHP_EOL . 'Sending to ' . $connection->getRemoteAddress() . ' at ' . date('c') . ' bytes ' . strlen((string) $data) . ' data: ' . PHP_EOL .
-                str_replace(chr(13), PHP_EOL, (string) $data) . ' ');
+            $msg = 'Sending to ' . $connection->getRemoteAddress() . ' at ' . date('c') . ' bytes ' . strlen((string) $data);
+            if ($self->logConfig['echoMessages'] ?? false) {
+                $msg .= ' data: ' . PHP_EOL . str_replace(chr(13), PHP_EOL, (string) $data) . ' ';
+            }
+            $self->log($msg);
         });
 
         // Log received data
         $this->on('data', function($data, ConnectionInterface $connection) use ($self) {
-            $self->log('Received from ' . $connection->getRemoteAddress() . ' at ' . date('c') . ' bytes ' . strlen($data) . ' data:' . PHP_EOL .
-                str_replace(chr(13), PHP_EOL, $data));
+            $msg = 'Received from ' . $connection->getRemoteAddress() . ' at ' . date('c') . ' bytes ' . strlen((string) $data);
+            if ($self->logConfig['echoMessages'] ?? false) {
+                $msg .= ' data: ' . PHP_EOL . str_replace(chr(13), PHP_EOL, (string) $data) . ' ';
+            }
+            $self->log($msg);
         });
     }
 
@@ -156,8 +168,8 @@ class HL7Listener extends EventEmitter implements EventEmitterInterface
         if ($this->verbose) {
             echo $message . PHP_EOL;
         }
-        if (isset($this->listenerConfig['listenerLog'])) {
-            file_put_contents($this->listenerConfig['listenerLog'], $message . PHP_EOL, FILE_APPEND);
+        if (isset($this->logConfig['listenerLog'])) {
+            file_put_contents($this->logConfig['listenerLog'], $message . PHP_EOL, FILE_APPEND);
         }
     }
 
@@ -231,24 +243,22 @@ class HL7Listener extends EventEmitter implements EventEmitterInterface
         $msh = $message->getMshSegment();
 
         if ($msh) {
-//            if (! $this->_messageTable) {
-//                $this->_initMessageTable();
-//            }
-//
-//            $values = [
-//                'hm_datetime'   => $msh->getDateTimeOfMessage()->getObject()->format('Y-m-d H:i:s'),
-//                'hm_type'       => $msh->getMessageType()->__toString(),
-//                'hm_msgid'      => $msh->getMessageControlId(),
-//                'hm_processing' => $msh->getProcessingId(),
-//                'hm_version'    => $msh->getVersionId(),
-//                'hm_message'    => $data,
-//            ];
-//
-//            // error_log(print_r($values, true));
-//
-//            if ($this->_messageTable->insert($values)) {
-//                return $this->_messageTable->getLastInsertValue();
-//            }
+            $values = [
+                'hm_datetime'   => $msh->getDateTimeOfMessage(),
+                'hm_type'       => $msh->getMessageType(),
+                'hm_msgid'      => $msh->getMessageControlId(),
+                'hm_processing' => $msh->getProcessingId(),
+                'hm_version'    => $msh->getVersionId(),
+                'hm_message'    => $data,
+            ];
+            // print_r($values);
+
+            $result = $this->messageStorageModel->save($values);
+
+            if (isset($result['hm_id'])) {
+                echo 'Result: ' . $result['hm_id'] . "\n";
+                return (int) $result['hm_id'];
+            }
         }
 
         return false;
@@ -265,7 +275,6 @@ class HL7Listener extends EventEmitter implements EventEmitterInterface
         $data = MLLPParser::enclose($data);
         $connection->write($data);
         $connection->removeAllListeners('error');
-
     }
 
     /**
@@ -276,7 +285,9 @@ class HL7Listener extends EventEmitter implements EventEmitterInterface
      */
     public function sendAcknowledgement(Message $message, ConnectionInterface $connection)
     {
-        $ack = new ACKMessage($message);
+        $ack = new ACKMessage($message, 'AA');
+
+        // echo "\n" . count($ack) . "\n" . str_replace(chr(13), "\r\n", (string) $ack) . "\n\n";
 
         $this->send((string) $ack, $connection);
 

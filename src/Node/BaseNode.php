@@ -28,6 +28,7 @@ abstract class BaseNode implements \ArrayAccess, \Countable, \Iterator
 
     public function __toString()
     {
+        // echo "\nClass: " . get_class($this->getMessage()) . "; " . $this->escapeSequenceKey . ".\n";
         $key = $this->getMessage()?->getEscapeSequence($this->escapeSequenceKey);
         return implode($key ?? '', $this->children);
     }
@@ -35,7 +36,7 @@ abstract class BaseNode implements \ArrayAccess, \Countable, \Iterator
     public function append(BaseNode $node)
     {
         $node->setParent($this);
-        array_push($this->children, $node);
+        $this->children[] = $node;
     }
 
     public function count(): int
@@ -50,6 +51,9 @@ abstract class BaseNode implements \ArrayAccess, \Countable, \Iterator
 
     public function getMessage(): ?Message
     {
+        if($this instanceof Message) {
+            return $this;
+        }
         if($this->parent instanceof Message) {
             return $this->parent;
         }
@@ -86,6 +90,9 @@ abstract class BaseNode implements \ArrayAccess, \Countable, \Iterator
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
+        if ($value instanceof BaseNode) {
+            $value->setParent($this);
+        }
         $this->children[$offset] = $value;
     }
 

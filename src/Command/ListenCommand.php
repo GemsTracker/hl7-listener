@@ -48,7 +48,7 @@ class ListenCommand extends Command
         ini_set('display_startup_errors', '1');
         error_reporting(E_ALL);
 
-        $this->projectOverloader->create('HL7\Server\HL7Listener', $listener);
+        $this->projectOverloader->create('Hl7\Server\Hl7Listener', $listener);
 
         return Command::SUCCESS;
     }

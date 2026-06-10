@@ -11,9 +11,6 @@ declare(strict_types=1);
 namespace Gems\Hl7\Node\Segment;
 
 use Gems\Hl7\Exception\ResponseException;
-use Gems\Hl7\Node\Component;
-use Gems\Hl7\Node\Field;
-use Gems\Hl7\Node\Repetition;
 use Gems\Hl7\Node\Segment;
 
 /**
@@ -36,6 +33,13 @@ use Gems\Hl7\Node\Segment;
 class MSASegment extends Segment
 {
     const IDENTIFIER = 'MSA';
+
+    const MSA_01_Acknowledgment_Code = 0;
+    const MSA_02_Message_Control_ID = 1;
+    const MSA_03_Text_Message = 2;
+    const MSA_04_Expected_Sequence_Number = 3;
+    const MSA_05_Delayed_Acknowledgment_Type = 45;
+    const MSA_06_Error_Condition = 5;
 
     public function __construct(string $segmentName = self::IDENTIFIER)
     {
@@ -61,27 +65,11 @@ class MSASegment extends Segment
             throw new ResponseException('Acknowledgement code should always be exactly 2 characters.');
         }
 
-        $field = new Field();
-        $field->setParent($this);
-
-        $repetition = new Repetition();
-        $field->append($repetition);
-        $component = new Component($code);
-        $repetition->append($component);
-
-        $this->children[1] = $field;
+        $this->setComponent($code, self::MSA_01_Acknowledgment_Code);
     }
 
     public function setMessageControlId($id)
     {
-        $field = new Field();
-        $field->setParent($this);
-
-        $repetition = new Repetition();
-        $field->append($repetition);
-        $component = new Component($id);
-        $repetition->append($component);
-
-        $this->children[2] = $field;
+        $this->setComponent($id, self::MSA_02_Message_Control_ID);
     }
 }

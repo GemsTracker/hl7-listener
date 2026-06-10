@@ -19,12 +19,14 @@ class ValueNode extends BaseNode
 {
     public $value = null;
 
-    public function __construct($value = null) {
+    public function __construct($value = null)
+    {
         $this->value = $value;
     }
 
-    public function __toString() {
-        if(count($this->children) === 0) {
+    public function __toString()
+    {
+        if (count($this->children) === 0) {
             return (string) $this->value;
         }
         return implode($this->getMessage()->getEscapeSequence($this->escapeSequenceKey), $this->children);
